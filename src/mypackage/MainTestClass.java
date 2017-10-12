@@ -73,41 +73,94 @@ public class MainTestClass {
         int max = map.get(0).get(0);
         // Save first element of arraylist index.
         int maxIndex = 0;
+        int saveMax = 0;
+        int saveMaxIndex = 0;
+        int saveMapIndex = 0;
+        boolean restartPath=false;
         
         // Write path
-        System.out.print(max);
+        //System.out.print(max);
         
         for(int j=1; j<map.size(); j++){
             
-            // check index+1>index number and is not prime
-            if(map.get(j).get(maxIndex+1) > map.get(j).get(maxIndex) &&
-                    !checkingPrime(map.get(j).get(maxIndex+1))){
+            // restart for new path 
+            // if the next numbers are prime.
+            if(restartPath){
+                maxIndex--;   
+                restartPath = false;
+             }
+            // prime control
+            if(!checkingPrime(map.get(j).get(maxIndex)) &&
+                checkingPrime(map.get(j).get(maxIndex+1))){
                 // Write path
-                System.out.print(" > " +map.get(j).get(maxIndex+1) );
+                //System.out.print(" > " +map.get(j).get(maxIndex) );
                 // add to the maximum sum
-                max+=map.get(j).get(maxIndex+1);
-                // increase index for next element controlling.
-                maxIndex++;
+                max+=map.get(j).get(maxIndex);
                 
-                // check index+1<=index number
-            }else{
-                // is not prime control
-                if(!checkingPrime(map.get(j).get(maxIndex))){
-                    // Write path
-                    System.out.print(" > " +map.get(j).get(maxIndex) );
-                    // add to the maximum sum
-                    max+=map.get(j).get(maxIndex);
+                //is prime control
+            }else if(!checkingPrime(map.get(j).get(maxIndex+1)) &&
+                      checkingPrime(map.get(j).get(maxIndex))){ // if index element is prime
+                // Write path
+                // System.out.print("");
+                //System.out.print(" >" +map.get(j).get(maxIndex+1) );
+                // add to the maximum sum.
+                max += map.get(j).get(maxIndex+1);
+                maxIndex++;    
+             // 2 numbers are not prime    
+            }else if(!checkingPrime(map.get(j).get(maxIndex)) && 
+                     !checkingPrime(map.get(j).get(maxIndex+1))){
+                
+                if( !restartPath ){
+                    saveMax = max;
+                    saveMaxIndex = maxIndex;
+                    saveMapIndex = j-1;
                 }
-                else{ // if index element is prime
-                    // Write path
-                    System.out.print(" > " +map.get(j).get(maxIndex+1) );
+
+                if( !restartPath && map.get(j).get(maxIndex)>map.get(j).get(maxIndex+1)){
+                    // System.out.print("");
+                    //System.out.print(" >" +map.get(j).get(maxIndex) );
                     // add to the maximum sum.
-                    max+=map.get(j).get(maxIndex+1);
+                    max += map.get(j).get(maxIndex);
+                    
+                }else{
+                    
+                    if(!restartPath){
+                       
+                        //System.out.print(" >" +map.get(j).get(maxIndex+1) );
+                        // add to the maximum sum.
+                        max += map.get(j).get(maxIndex+1);
+                        maxIndex++;
+                    }
                 }
+                     
+            }else{ // 2 numbers are prime.
+                
+                //save values to restart for new path
+                j=saveMapIndex;
+                max = saveMax;
+                maxIndex = saveMaxIndex;
+                restartPath = true;
+                    
             }
         }
         // Write the maximum sum.
-        System.out.println("\nMax:" +  max);    
+        System.out.println("\nMax:" +  max); 
+        
+        /*
+        if( restartPath
+                && (!checkingPrime(map.get(j).get(maxIndex)) && !checkingPrime(map.get(j).get(maxIndex+1)))
+                && (map.get(j).get(maxIndex) > map.get(j).get(maxIndex+1)))
+            {
+                saveMaxIndex = maxIndex+1;
+                saveMax = max;
+                saveMapIndex = j;
+                 // Write path
+                System.out.print(" >.." + map.get(j).get(maxIndex+1) );
+                maxIndex++;
+                restartPath =false;
+                
+            }
+        */
     }
     /**
      * Checking is prime number
